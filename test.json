@@ -1,0 +1,46 @@
+[
+  {
+    "projet": "ecli-fo",
+    "tag": "develop",
+    "toggles": [
+      {
+        "CONF_TOGGLES_ITT_EVO_COURRIERS_ENABLED": [
+          {
+            "d": "true",
+            "k": "true",
+            "r": "false",
+            "q": "true",
+            "p": "false"
+          }
+        ],
+        "CONF_TOGGLES_SYNTHESE_DEVIS_REFONTE_MUTUALISATION_SANTE_AUTO_MRH": [
+          {
+            "d": "true",
+            "k": "true",
+            "r": "false",
+            "q": "true",
+            "p": "false"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "projet": "ecli-mo",
+    "tag": "develop",
+    "toggles": [
+      {
+        "FEATURE_DEBRANCHEMENT_AI_ENABLE": [
+          {
+            "d": "true",
+            "k": "true",
+            "r": "false",
+            "q": "true",
+            "p": "false"
+          }
+        ]
+      }
+    ]
+  }
+]
+       
