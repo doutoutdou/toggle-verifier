@@ -12,13 +12,19 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
-  /verify:
+  /verify/{id}:
     get:
       operationId: "verifier.verify_toggle"
       tags:
         - "verifier"
       summary: "The reservation data structure supported by the server application"
       description: "Read the list of reservations"
+      parameters:
+        - in : path
+          name: id
+          type: "string"
+          description: the toggle file name
+          required: true
       responses:
         200:
           description: "Successful read reservation list operation"

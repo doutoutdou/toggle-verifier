@@ -13,7 +13,6 @@ app.add_api('swagger.yml')
 # cors support
 CORS(app.app)
 
-
 @app.route('/')
 def home():
     """
