@@ -1,5 +1,3 @@
-import json
-
 import requests
 
 gitlab_root_url = "https://git.ra1.intra.groupama.fr/api/v4"
@@ -39,5 +37,4 @@ def get_toggles(version):
     project_url = gitlab_conf_toggle_file_url.replace("version", version)
     print(project_url)
     # Certif auto signé donc verify à False
-    result = requests.get(gitlab_root_url + project_url, verify=False, headers=headers)
-    return result.json()
+    return requests.get(gitlab_root_url + project_url, verify=False, headers=headers)

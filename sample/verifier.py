@@ -1,19 +1,16 @@
-import json
-from datetime import datetime
-# from flask import make_response, abort, jsonify
-# import json
-import datetime
-
 from gitlab_helper import get_project_id, get_project_configuration, get_toggles
 
 
-def verify_toggle(id):
+def verify_toggle(toggle_tag):
 
     # récupération du fichier contenant les toggles pour la version
-    projects_toggle_configuration = get_toggles(id)
+    projects_toggle_configuration = get_toggles(toggle_tag)
+    # On suppose que si pas 200 alors c'est que le fichier n'a pas été trouvé, par exemple mauvais tag fourni
+    if projects_toggle_configuration.status_code != 200:
+        return "Fichier de toggle non trouvé pour le tag indiqué", 404
     # on crée un dict global qui contiendra en retour tous les toggles non trouvés
     global_toggle_dict = dict()
-    for projects in projects_toggle_configuration:
+    for projects in projects_toggle_configuration.json():
         project_name = projects.get('projet')
         tag_version = projects.get('tag')
         toggles = projects.get('toggles')
@@ -55,7 +52,6 @@ def verify_toggle(id):
                     # print(toggle_dict[environment_key])
                     # print("apres")
             # si plus de toggle pour un environnement, alors on supprime
-            print("longueur par envir")
             if len(toggle_dict[environment_key]) == 0:
                 del toggle_dict[environment_key]
         # si des toggles ne sont pas trouvés alors on ajoute pour les afficher en retour
@@ -63,65 +59,7 @@ def verify_toggle(id):
             # print("dict not empty")
             # print(toggle_dict)
             global_toggle_dict[project_name] = toggle_dict
-    return global_toggle_dict
-                # toggle_list[toggle_list_key]
-                # print(toggle_list_key)
-                # for toggle_key in toggle_list[toggle_list_key]:
-                #     print(toggle_key)
-
-                    # print(toggle_list)
-            # for line in project_configuration:
-            #     if len(toggle_list) == 0:
-            #         print("on arrete car on a vide la liste des toggles à vérifier")
-            #         break
-            #     line_as_list = line.split("=")
-            #     key = line_as_list[0]
-            #     if toggles.__contains__(key):
-            #         if toggle_list[key].casefold() == line_as_list[1].casefold():
-            #             print(key)
-                        # toggle_list.__delitem__(key)
-            # print(toggle_list)
-            # print("toggle_list_après")
-
-        # print(toggle_dict)
-        # print(env)
-        # print("otot")
-        # print(value)
-        # i = 0
-        # for keys in toggle.keys():
-        # print(keys)
-
-        # A VOIR => https://devstory.net/11437/python-dictionary
-        # A VOIR => "https://www.programiz.com/python-programming/nested-dictionary"
-        # for key, value in projects.items():
-        #     if key == "projet":
-        #         projet_name = value
-        #     if key == "tag":
-        #         tag_version = value
-        #
-        #     print(projet_name)
-        #     print(tag_version)
-        # for project in projects:
-        #     print(project)
-        # print(project["projet"])
-        # print(project['tag'])
-        # print(project['toggles'])
-    # Print the type of data variable
-    # print("Type:", type(toggles))
-    # project_id = get_project_id("ecli-fo")
-    # configuration_iter = iter(get_project_configuration(project_id, "d", "develop").splitlines())
-    # for line in configuration_iter:
-    #     if len(toggles) == 0:
-    #         print("on arrete car on a vide le dictionnaire")
-    #         break
-    #     line_as_list = line.split("=")
-    #     key = line_as_list[0]
-    #     if toggles.__contains__(key):
-    #         if toggles[key].casefold() == line_as_list[1].casefold():
-    #             # print(key)
-    #             toggles.__delitem__(key)
-
-    # with configuration as file:
-    #     for line in file:
-    #         print(line)  # The comma to suppress the extra new line char
-    # return "toto", 200
+    if len(global_toggle_dict) == 0:
+        return "Tous les toggles sont OK", 200
+    else:
+        return global_toggle_dict, 206

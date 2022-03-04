@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   description: This is the swagger file that goes with our server code
   version: "1.0.0"
-  title: Swagger REST Article
+  title: Swagger du projet Toggle Verifier
 consumes:
   - "application/json"
 produces:
@@ -12,135 +12,32 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
-  /verify/{id}:
+  /verify/{toggle_tag}:
     get:
       operationId: "verifier.verify_toggle"
       tags:
-        - "verifier"
-      summary: "The reservation data structure supported by the server application"
-      description: "Read the list of reservations"
+        - "verify"
+      summary: "nope"
+      description: "Vérifie les toggles pour les projets définis dans le fichier pour le tag passé en paramère"
       parameters:
         - in : path
-          name: id
+          name: toggle_tag
           type: "string"
-          description: the toggle file name
+          description: le tag du fichier de toggle à vérifier, par exemple 2022.0301.1
           required: true
       responses:
         200:
-          description: "Successful read reservation list operation"
+          description: "Tous les toggles sont ok"
           schema:
-            type: "array"
-            items:
-              properties:
-                id:
-                  type: "integer"
-                day:
-                  type: "string"
-                booked:
-                  type: "boolean"
-#    post:
-#      operationId: "reservations.create_reservation"
-#      tags:
-#        - "reservations"
-#      summary: "The reservation data structure supported by the server application"
-#      description: "Create a new reservation"
-#      parameters:
-#        - in : query
-#          name: day
-#          type: string
-#          description: the reservation date
-#          required: true
-#      responses:
-#        201:
-#          description: "if operation is a success"
-#          schema:
-#            type: "string"
-#  /reservations/{id}:
-#    delete:
-#      operationId: "reservations.delete_reservation"
-#      tags:
-#        - "reservations"
-#      summary: "The reservation data structure supported by the server application"
-#      description: "delete a reservation"
-#      parameters:
-#        - in : path
-#          name: id
-#          type: integer
-#          description: the order id
-#          required: true
-#      responses:
-#        204:
-#          description: "if operation is a success"
-#          schema:
-#            type: "string"
-#  /reservations/{id}/orders:
-#    get:
-#      operationId: "reservations.get_orders"
-#      tags:
-#        - "orders"
-#      summary: "The order data structure supported by the server application"
-#      description: "Read all orders for this reservation"
-#      parameters:
-#        - name: id
-#          in: path
-#          description: reservation id
-#          type: integer
-#          required: True
-#      responses:
-#        200:
-#          description: "Successful read orders operation"
-#          schema:
-#            type: "array"
-#            items:
-#              properties:
-#                reservation_id:
-#                  type: "integer"
-#                customer_name:
-#                  type: "string"
-#                customer_order:
-#                  type: "string"
-#    post:
-#      operationId: "reservations.create_order"
-#      tags:
-#        - "orders"
-#      summary: "The order data structure supported by the server application"
-#      description: "Create a new order"
-#      parameters:
-#        - in : path
-#          name: id
-#          type: integer
-#          description: the reservation id
-#          required: true
-#        - in : query
-#          name: customer_name
-#          type: string
-#          description: the customer_name
-#          required: true
-#        - in : query
-#          name: customer_order
-#          type: string
-#          description: the customer_order
-#          required: true
-#      responses:
-#        201:
-#          description: "if operation is a success"
-#          schema:
-#            type: "string"
-#  /orders/{id}:
-#    delete:
-#      operationId: "reservations.delete_order"
-#      tags:
-#        - "orders"
-#      summary: "The order data structure supported by the server application"
-#      description: "delete an order"
-#      parameters:
-#        - in : path
-#          name: id
-#          type: integer
-#          description: the order id
-#          required: true
-#      responses:
-#        204:
-#          description: "if operation is a success"
-#          schema:
-#            type: "string"
+            type: "string"
+            example: Tous les toggles sont OK
+        206:
+          description: "Certains toggles sont KO"
+          schema:
+            type: "string"
+            example: Retourne la liste des toggles non trouvés (ou avec des valeurs différentes) sur les repos des projets
+        404:
+          description: "Fichier de toggle non trouvé"
+          schema:
+            type: "string"
+            example: Fichier de toggle non trouvé pour le tag indiqué
