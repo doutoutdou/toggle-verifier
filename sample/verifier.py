@@ -3,7 +3,7 @@ from gitlab_helper import get_project_id, get_project_configuration, get_toggles
 
 def verify_toggle(toggle_tag):
 
-    # récupération du fichier contenant les toggles pour la version
+    # récupération du fichier contenant les toggles pour la version indiquée
     projects_toggle_configuration = get_toggles(toggle_tag)
     # On suppose que si pas 200 alors c'est que le fichier n'a pas été trouvé, par exemple mauvais tag fourni
     if projects_toggle_configuration.status_code != 200:
@@ -13,7 +13,7 @@ def verify_toggle(toggle_tag):
     for projects in projects_toggle_configuration.json():
         project_name = projects.get('projet')
         tag_version = projects.get('tag')
-        # Si le tag vaut develop, alors pas d'installation donc pas de vérification de tag
+        # Si le tag vaut develop, alors pas d'installation donc pas de vérification de toggle
         if tag_version == "develop":
             continue
         toggles = projects.get('toggles')
@@ -37,24 +37,17 @@ def verify_toggle(toggle_tag):
         # On a la liste de tous les toggles à vérifier pour un projet et tous les  environnements
         # on utilise list pour faire une copie, sinon on ne peut pas modifier le dictionnaire vu qu'on itère dessus
         for environment_key in list(toggle_dict.keys()):
-            # print(environment_key)
             # FIXME voir pour les repos sur suricate ...
             toggle_list = toggle_dict[environment_key]
             # On récupère la conf des toggles sur GIT pour un projet & 1 envir donné
             project_configuration = get_project_configuration(project_id, environment_key, tag_version)
             for key, value in list(toggle_list.items()):
-                # print(key)
-                # print(value)
-                # on reconstruit le toggle et sa valeur pour aller chercher dans le fichier de conf ensuite
+                # on reconstruit le toggle et sa valeur pour aller chercher dans le fichier de conf openshift ensuite
                 toggle_with_value = key + "=" + value
                 if project_configuration.find(toggle_with_value) != -1:
                     # si -1 alors la clé n'a pas été trouvée dans le fichier
-                    # print("avant")
-                    # print(toggle_dict[environment_key])
                     del toggle_dict[environment_key][key]
-                    # print(toggle_dict[environment_key])
-                    # print("apres")
-            # si plus de toggle pour un environnement, alors on supprime
+            # si plus de toggle pour un environnement, alors on supprime l'environnement
             if len(toggle_dict[environment_key]) == 0:
                 del toggle_dict[environment_key]
         # si des toggles ne sont pas trouvés alors on ajoute pour les afficher en retour
