@@ -33,13 +33,13 @@ def verify_toggle(toggle_tag):
                             toggle_dict[environment_key] = env_dict
                         # on ajoute maintenant le toggle et sa valeur
                         toggle_dict[environment_key][toggle_name] = environment[environment_key]
+        project_id = get_project_id(project_name)
         # On a la liste de tous les toggles à vérifier pour un projet et tous les  environnements
         # on utilise list pour faire une copie, sinon on ne peut pas modifier le dictionnaire vu qu'on itère dessus
         for environment_key in list(toggle_dict.keys()):
             # print(environment_key)
             # FIXME voir pour les repos sur suricate ...
             toggle_list = toggle_dict[environment_key]
-            project_id = get_project_id(project_name)
             # On récupère la conf des toggles sur GIT pour un projet & 1 envir donné
             project_configuration = get_project_configuration(project_id, environment_key, tag_version)
             for key, value in list(toggle_list.items()):
