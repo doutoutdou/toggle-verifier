@@ -3,7 +3,7 @@ import requests
 gitlab_root_url = "https://git.ra1.intra.groupama.fr/api/v4"
 gitlab_project_conf_file_url = "/projects/project_id/repository/files/.openshift%2Fenvironment%2Fproject_environment%2Fconfigmap.properties/raw?ref=version"
 gitlab_conf_toggle_file_url = "/projects/6973/repository/files/version.json/raw?ref=master"
-gitlab_search_url = "/search?scope=projects&search=project_name&simple=true&membership=true"
+gitlab_search_url = "/projects?search=project_name&simple=true&membership=true"
 
 # access token perso avec seulement les droits read_api, read_repository
 headers = {'PRIVATE-TOKEN': 'BiG6CEXxiXyz6iomgBVW'}
