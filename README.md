@@ -70,3 +70,5 @@ Cela permet de mettre à jour le fichier indiquant les dépendances à télécha
 ## Doc
 ### virtualEnv
 https://python-guide-pt-br.readthedocs.io/fr/latest/dev/virtualenvs.html
+### Pour virer les logs https en insecure
+export PYTHONWARNINGS="ignore:Unverified HTTPS request"

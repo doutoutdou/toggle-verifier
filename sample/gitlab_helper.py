@@ -7,7 +7,8 @@ gitlab_project_conf_file_url = "/projects/project_id/repository/files/.openshift
 gitlab_conf_toggle_file_url = "/projects/6973/repository/files/version.json/raw?ref=master"
 gitlab_search_url = "/search?scope=projects&search=project_name&simple=true&membership=true"
 
-headers = {'PRIVATE-TOKEN': 'Q-zjomx5qZ_g-26tc2Dw'}
+# access token perso avec seulement les droits read_api, read_repository
+headers = {'PRIVATE-TOKEN': 'BiG6CEXxiXyz6iomgBVW'}
 
 
 def get_gitlab_request():
@@ -33,7 +34,7 @@ def get_project_configuration(project_id, environment, version):
     return result.text
 
 
-# Récupère le fichier de configuration de toggle pour une version donnéel
+# Récupère le fichier de configuration de toggle pour une version donnée
 def get_toggles(version):
     project_url = gitlab_conf_toggle_file_url.replace("version", version)
     print(project_url)
