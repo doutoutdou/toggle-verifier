@@ -1,0 +1,49 @@
+"Ce fichier est un fichier exemple pour expliquer la structure attendue"
+[
+  {
+    "projet": "ecli-fo", => on indique le nom GIT du projet
+    "tag": "2022.0301.1", => on indique le tag qui doit être vérifié pour ce projet, ou develop si pas à vérifier (par exemple pas d'installation du FO pour cette version)'
+    "toggles": [
+      {
+        "CONF_TOGGLES_ITT_EVO_COURRIERS_ENABLED": [ => indique la clé du toggle telle que présente dans les fichiers de conf openshift
+          {
+            "d": "true", => pour chaque environnement, indiquer la lettre et la valeur attendue
+            "k": "true",
+            "r": "true",
+			"m": "false",
+            "dmz-q": "false",
+            "dmz": "false"
+          }
+        ],
+        "CONF_TOGGLES_SYNTHESE_DEVIS_REFONTE_MUTUALISATION_SANTE_AUTO_MRH": [
+          {
+            "d": "true",
+            "k": "true",
+            "r": "true",
+			"m": "true",
+            "dmz-q": "false",
+            "dmz": "false"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "projet": "ecli-mo",
+    "tag": "2022.0215.2",
+    "toggles": [
+      {
+        "FEATURE_DEBRANCHEMENT_AI_ENABLE": [
+          {
+            "d": "true",
+            "k": "true",
+            "r": "true",
+			"m": "true",
+            "q": "true",
+            "p": "true"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -12,11 +12,14 @@ Si projet démarré alors se rendre sur `/api/ui/`
 
 un endpoint est exposé sur `/api/verify/{toggle_tag}`, celui ci effectue les actions suivantes : 
 
-1. Récupère sur GIT le fichier contenant la conf globale des toggles attendue pour la version passée en paramètre ([exemple ici](https://git.ra1.intra.groupama.fr/GSB932/conf-toggle/-/blob/master/test_ok.json))   
+1. Récupère sur GIT le fichier contenant la conf globale des toggles attendue pour la version passée en paramètre ([exemple ici](https://git.ra1.intra.groupama.fr/GSB932/conf-toggle/-/blob/master/test_ok.json)) ou alors dans le repertoire `examples`   
 1.1. une 404 est retournée si ce fichier n'est pas trouvé
-2. Pour chaque projet detecté dans le fichier, on vient regarder si les toggles de ce fichier (pour chaque environnement) correspondent aux toggles indiqués dans les fichiers de configuration openshift
-* Si tous les toggles sont trouvés, alors la réponse indique que c'est un succès  
-* Sinon la liste des toggles qui ne correspondent pas est retournée  
+2. Pour chaque projet detecté dans le fichier :
+   1. si `"tag": "develop"` alors on ignore ce projet (develop veut dire que le projet ne sera pas installé dans cette version  
+   2. sinon, pour le tag indiqué, on regarde si les toggles de ce fichier correspondent aux toggles indiqués dans les fichiers de configuration openshift (pour le tag donné) (pour tous les environnements indiqués dans le fichier des toggles)  
+3. La réponse retournée suite à ce traitement peut alors être :  
+   1. 200 : Si tous les toggles sont trouvés, alors la réponse indique que c'est un succès  
+   2. 206 : Sinon la liste des toggles qui ne correspondent pas est retournée)  
 
 ## Stack technique
 Ce projet est en python et se base sur le framework Flask avec une surcouche Connexion (qui permet de gérer des endpoints via un fichier swagger directement notamment).

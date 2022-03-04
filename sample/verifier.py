@@ -13,6 +13,9 @@ def verify_toggle(toggle_tag):
     for projects in projects_toggle_configuration.json():
         project_name = projects.get('projet')
         tag_version = projects.get('tag')
+        # Si le tag vaut develop, alors pas d'installation donc pas de vérification de tag
+        if tag_version == "develop":
+            continue
         toggles = projects.get('toggles')
         toggle_dict = dict()
         # on itère pour récupérer tous les toggles d'un projet
@@ -56,8 +59,6 @@ def verify_toggle(toggle_tag):
                 del toggle_dict[environment_key]
         # si des toggles ne sont pas trouvés alors on ajoute pour les afficher en retour
         if len(toggle_dict) != 0:
-            # print("dict not empty")
-            # print(toggle_dict)
             global_toggle_dict[project_name] = toggle_dict
     if len(global_toggle_dict) == 0:
         return "Tous les toggles sont OK", 200
