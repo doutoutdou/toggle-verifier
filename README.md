@@ -82,7 +82,20 @@ Démarrer via Flask permet de profiter de fonctionnalités supplémentaires, par
 De la doc [par ici](https://flask.palletsprojects.com/en/2.0.x/quickstart/)
 
 ### Avec docker
-TODO
+Pas de rechargement à chaud, à utiliser pour déploiement
+#### Build image
+pour pip, il faut que le proxy soit configuré, le mieux est d'avoir la conf sur votre machine 
+et de passer les arguments au moment du build.
+```bash
+docker build -t toggle-verifier --build-arg http_proxy=$HTTP_PROXY --build-arg https_proxy=$HTTP_PROXY --network=host .
+```
+
+#### Run
+```bash
+ docker run -p 5000:5000 -d --name toggle-verifier-container toggle-verifier
+ ```
+
+L'api est ensuite accessible sur le port 5000
 
 ## En cas de mise à jour
 ### Ajout de dépendance
