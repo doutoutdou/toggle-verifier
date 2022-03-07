@@ -29,6 +29,7 @@ def get_project_configuration(project_id, environment, version):
         "version", version)
     # Certif auto signé donc verify à False
     result = requests.get(gitlab_root_url + project_url, verify=False, headers=headers)
+    print(gitlab_root_url + project_url)
     return result.text
 
 
