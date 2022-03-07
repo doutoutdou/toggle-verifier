@@ -1,4 +1,7 @@
+import distutils
+
 from gitlab_helper import get_project_id, get_project_configuration, get_suricate_configuration, get_toggles
+import yaml
 
 
 def verify_toggle(toggle_tag):
@@ -26,12 +29,11 @@ def verify_toggle(toggle_tag):
         # On a la liste de tous les toggles à vérifier pour un projet et tous les  environnements
         # on utilise list pour faire une copie, sinon on ne peut pas modifier le dictionnaire vu qu'on itère dessus
         for environment_key in list(toggle_dict.keys()):
-            # FIXME voir pour les repos sur suricate ...
             toggle_list = toggle_dict[environment_key]
 
             # Il ne faut pas procéder de la même facon si la conf est sur un repo suricate
             if suricate == "true":
-                search_toggle_in_suricate_configuration_files(environment_key, project_id, tag_version, toggle_dict, toggle_list)
+                search_toggle_in_suricate_files(environment_key, tag_version, toggle_dict, toggle_list)
             else:
                 search_toggle_in_configuration_files(environment_key, project_id, tag_version, toggle_dict, toggle_list)
 
@@ -81,15 +83,20 @@ def search_toggle_in_configuration_files(environment_key, project_id, tag_versio
 
 
 # Effectue la recherche des toggles dans suricate
-def search_toggle_in_suricate_configuration_files(environment_key, project_id, tag_version, toggle_dict, toggle_list):
+def search_toggle_in_suricate_files(environment_key, tag_version, toggle_dict, toggle_list):
     # On récupère la conf des toggles sur GIT pour un projet & 1 envir donné
-    project_configuration = get_suricate_configuration(environment_key, tag_version)
-    # for key, value in list(toggle_list.items()):
-    #     # on reconstruit le toggle et sa valeur pour aller chercher dans le fichier de conf openshift ensuite
-    #     toggle_with_value = key + "=" + value
-    #     if project_configuration.find(toggle_with_value) != -1:
-    #         # si -1 alors la clé n'a pas été trouvée dans le fichier
-    #         del toggle_dict[environment_key][key]
-    # # si plus de toggle pour un environnement, alors on supprime l'environnement
-    # if len(toggle_dict[environment_key]) == 0:
-    #     del toggle_dict[environment_key]
+    project_configuration = yaml.load(get_suricate_configuration(environment_key, tag_version))
+    toggles_from_suricate = project_configuration["oyster"]["toggles"]
+    for key, value in list(toggle_list.items()):
+        # FIXME, très moche de devoir faire ça, à améliorer
+        # on a une liste de la forme {'name': 'contrat_affichageSuperDetailMRI', 'active': True}
+        # et il faut regarder si la valeur de la clé name correspond à la clé du toggle présent dans la liste
+        # Performance \o/
+        for toggle in toggles_from_suricate:
+            if toggle["name"].casefold() == key.casefold():
+                # FIXME, gérer la notion de strategyParams .. à mettre dans le fichier de référence aussi
+                if toggle["active"] == distutils.util.strtobool(value):
+                    del toggle_dict[environment_key][key]
+        # si plus de toggle pour un environnement, alors on supprime l'environnement
+    if len(toggle_dict[environment_key]) == 0:
+        del toggle_dict[environment_key]
