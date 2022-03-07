@@ -64,13 +64,16 @@ pip install -r requirements.txt
 #### Démarrage appli
 ##### Via commande python
 ```bash
+python sample/app.py
+# Ou
+cd sample
 python app.py
 ```
 
 ##### Via Flask
 ```bash
 # On indique ici le nom du fichier, à faire 1 seul fois
-export FLASK_APP=app
+export FLASK_APP=sample/app
 # Pour démarrer
 flask run
 ```

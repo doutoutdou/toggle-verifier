@@ -1,4 +1,4 @@
-import distutils
+from distutils import util
 
 from gitlab_helper import get_project_id, get_project_configuration, get_suricate_configuration, get_toggles
 import yaml
@@ -95,7 +95,7 @@ def search_toggle_in_suricate_files(environment_key, tag_version, toggle_dict, t
         for toggle in toggles_from_suricate:
             if toggle["name"].casefold() == key.casefold():
                 # FIXME, gérer la notion de strategyParams .. à mettre dans le fichier de référence aussi
-                if toggle["active"] == distutils.util.strtobool(value):
+                if toggle["active"] == util.strtobool(value):
                     del toggle_dict[environment_key][key]
         # si plus de toggle pour un environnement, alors on supprime l'environnement
     if len(toggle_dict[environment_key]) == 0:
