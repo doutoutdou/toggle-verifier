@@ -4,4 +4,4 @@ copy requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 copy ./sample .
 EXPOSE 5000
-CMD [ "python3", "app.py", "--host=0.0.0.0"]
+CMD [ "gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]
