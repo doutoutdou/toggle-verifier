@@ -1,4 +1,4 @@
-from gitlab_helper import get_project_id, get_project_configuration, get_toggles
+from gitlab_helper import get_project_id, get_project_configuration, get_suricate_configuration, get_toggles
 
 
 def verify_toggle(toggle_tag):
@@ -13,6 +13,7 @@ def verify_toggle(toggle_tag):
     for projects in projects_toggle_configuration.json():
         project_name = projects.get('projet')
         tag_version = projects.get('tag')
+        suricate = projects.get('suricate')
         # Si le tag vaut develop, alors pas d'installation donc pas de vérification de toggle
         if tag_version == "develop":
             continue
@@ -28,7 +29,12 @@ def verify_toggle(toggle_tag):
             # FIXME voir pour les repos sur suricate ...
             toggle_list = toggle_dict[environment_key]
 
-            search_toggle_in_configuration_files(environment_key, project_id, tag_version, toggle_dict, toggle_list)
+            # Il ne faut pas procéder de la même facon si la conf est sur un repo suricate
+            if suricate == "true":
+                search_toggle_in_suricate_configuration_files(environment_key, project_id, tag_version, toggle_dict, toggle_list)
+            else:
+                search_toggle_in_configuration_files(environment_key, project_id, tag_version, toggle_dict, toggle_list)
+
         # si des toggles ne sont pas trouvés alors on ajoute pour les afficher en retour
         if len(toggle_dict) != 0:
             global_toggle_dict[project_name] = toggle_dict
@@ -72,3 +78,18 @@ def search_toggle_in_configuration_files(environment_key, project_id, tag_versio
     # si plus de toggle pour un environnement, alors on supprime l'environnement
     if len(toggle_dict[environment_key]) == 0:
         del toggle_dict[environment_key]
+
+
+# Effectue la recherche des toggles dans suricate
+def search_toggle_in_suricate_configuration_files(environment_key, project_id, tag_version, toggle_dict, toggle_list):
+    # On récupère la conf des toggles sur GIT pour un projet & 1 envir donné
+    project_configuration = get_suricate_configuration(environment_key, tag_version)
+    # for key, value in list(toggle_list.items()):
+    #     # on reconstruit le toggle et sa valeur pour aller chercher dans le fichier de conf openshift ensuite
+    #     toggle_with_value = key + "=" + value
+    #     if project_configuration.find(toggle_with_value) != -1:
+    #         # si -1 alors la clé n'a pas été trouvée dans le fichier
+    #         del toggle_dict[environment_key][key]
+    # # si plus de toggle pour un environnement, alors on supprime l'environnement
+    # if len(toggle_dict[environment_key]) == 0:
+    #     del toggle_dict[environment_key]
