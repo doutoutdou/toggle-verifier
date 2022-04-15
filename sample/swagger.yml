@@ -1,0 +1,43 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Swagger du projet Toggle Verifier
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+# Paths supported by the server application
+paths:
+  /verify/{toggle_tag}:
+    get:
+      operationId: "verifier.verify_toggle"
+      tags:
+        - "verify"
+      summary: "nope"
+      description: "Vérifie les toggles pour les projets définis dans le fichier pour le tag passé en paramère"
+      parameters:
+        - in : path
+          name: toggle_tag
+          type: "string"
+          description: le tag du fichier de toggle à vérifier, par exemple 2022.0301.1
+          required: true
+      responses:
+        200:
+          description: "Tous les toggles sont ok"
+          schema:
+            type: "string"
+            example: Tous les toggles sont OK
+        206:
+          description: "Certains toggles sont KO"
+          schema:
+            type: "string"
+            example: Retourne la liste des toggles non trouvés (ou avec des valeurs différentes) sur les repos des projets
+        404:
+          description: "Fichier de toggle non trouvé"
+          schema:
+            type: "string"
+            example: Fichier de toggle non trouvé pour le tag indiqué
